@@ -1,0 +1,147 @@
+<!-- Our launchAvatarApp.js loads this HTML page and contains the logic for
+     the app. This HTML page sets up listeners to fire events that launchAvatarApp.js
+    acts on. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Avatar Switcher</title>
+<meta name="description" content="">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css?family=Raleway:300,400,600,700" rel="stylesheet">
+<style>
+  html {
+    height: 100%;
+  }
+
+  body {
+    background: linear-gradient(#2b2b2b, #0f212e) no-repeat;
+    color: white;
+    font-family: 'Raleway', sans-serif;
+    height: 100%;
+    margin: 0;
+    width: 100%;
+  }
+
+  header {
+    height: 90px;
+    background: linear-gradient(#2b2b2b, #1e1e1e);
+    font-weight: bold;
+    padding-left: 30px;
+    padding-right: 30px;
+    display: flex;
+    align-items: center;
+    top: 0;
+  }
+
+  h1 {
+    font-size: 1rem;
+  }
+
+  main {
+    padding: 30px;
+  }
+
+  button {
+    font-family: 'Raleway';
+    font-weight: bold;
+    font-size: 13px;
+    text-transform: uppercase;
+    vertical-align: top;
+    height: 28px;
+    min-width: 120px;
+    padding: 0 18px;
+    margin-right: 6px;
+    border-radius: 5px;
+    border: none;
+    color: #fff;
+    background-color: #000;
+    background: linear-gradient(#343434 20%, #000 100%);
+    cursor: pointer;
+  }
+
+  button.white {
+    color: #121212;
+    background-color: #afafaf;
+    background: linear-gradient(#fff 20%, #afafaf 100%);
+  }
+
+  button:enabled:hover {
+    background: linear-gradient(#000, #000);
+    border: none;
+  }
+
+  button.white:enabled:hover {
+    background: linear-gradient(#fff, #fff);
+    border: none;
+  }
+
+  button:active {
+    background: linear-gradient(#343434, #343434);
+  }
+
+  button.white:active {
+    background: linear-gradient(#afafaf, #afafaf);
+  }
+
+  button:disabled {
+    color: #252525;
+    background: linear-gradient(#575757 20%, #252525 100%);
+  }
+
+  footer {
+    /*font-size: .8rem;*/
+    padding: 30px;
+  }
+</style>
+
+</head>
+<body>
+  <header>
+    <h1>Choose an Avatar</h1>
+  </header>
+  <main>
+    <p><button class="white avatar-button" value="Avatar 1">Avatar 1</button></p>
+    <p><button class="white avatar-button" value="Avatar 2">Avatar 2</button></p>
+  </main>
+
+  <footer>Avatar Switcher 0.1.14</footer>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+  <script>
+    function main() {
+      // i.e. we're in HiFi
+      var hasEventBridge = (typeof EventBridge !== 'undefined');
+      // i.e. we're in browser
+      var hasConsole = (typeof console !== 'undefined');
+
+      if (hasEventBridge) {
+        EventBridge.emitWebEvent('Document Ready');
+      } else if (hasConsole) {
+        console.log('Document Ready, but Not in HiFi');
+      }
+
+      // TODO: Figure out what events need to be used with standard JS,
+      // so we can remove jQuery if need be.
+      // Using 'click', 'mouseup', and 'mousedown' didn't work.
+
+      $('.avatar-button').click(function() {
+        // build object to stringify
+        var message = JSON.stringify({
+          "type": "click",
+          "data": this.value
+        });
+
+        if (hasEventBridge) {
+          EventBridge.emitWebEvent(message);
+        } else if (hasConsole) {
+          console.log('would emit web event:', message);
+        }
+      });
+    }
+
+    $(document).ready(main);
+  </script>
+</body>
+</html>
